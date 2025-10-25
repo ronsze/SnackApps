@@ -21,4 +21,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "SnackApps"
 include(":app")
- 
+include(":core")
+include(":featuers")
