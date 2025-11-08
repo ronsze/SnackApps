@@ -48,5 +48,15 @@ gradlePlugin {
             id = libs.plugins.snack.library.get().pluginId
             implementationClass = "LibraryConventionPlugin"
         }
+
+        register("compose") {
+            id = libs.plugins.snack.compose.get().pluginId
+            implementationClass = "ComposeConventionPlugin"
+        }
+
+        register("hilt") {
+            id = libs.plugins.snack.hilt.get().pluginId
+            implementationClass = "HiltConventionPlugin"
+        }
     }
 }

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tab_clock">시계</string>
+    <string name="tab_timer">타이머</string>
+    <string name="tab_stopwatch">스톱워치</string>
+
+    <string name="invalid_time">유효하지 않은 시간입니다.</string>
+</resources>

@@ -1,6 +1,4 @@
 import com.android.build.api.dsl.ApplicationExtension
-import com.android.build.api.dsl.LibraryExtension
-import configuration.configureAndroidCompose
 import configuration.configureKotlinAndroid
 import configuration.libs
 import org.gradle.api.Plugin
@@ -14,17 +12,26 @@ class ApplicationConventionPlugin : Plugin<Project> {
         with(target) {
             apply(plugin = "com.android.application")
             apply(plugin = "org.jetbrains.kotlin.android")
+            apply(plugin = "snack.compose")
+            apply(plugin = "snack.hilt")
 
             extensions.configure<ApplicationExtension> {
                 configureKotlinAndroid(this)
-                configureAndroidCompose(this)
                 defaultConfig.testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
             }
 
             dependencies {
+                "implementation"(project(":core:ui"))
+                "implementation"(project(":core:design-system"))
+
+                rootDir.resolve("features").listFiles()
+                    ?.filter { it.isDirectory && file("${it.path}/build.gradle.kts").exists() }
+                    ?.forEach { "implementation"(project(":features:${it.name}")) }
+
                 "implementation"(libs.findLibrary("androidx-core-ktx").get())
                 "implementation"(libs.findLibrary("androidx-appcompat").get())
                 "implementation"(libs.findLibrary("material").get())
+                "implementation"(libs.findLibrary("androidx-lifecycle-runtime-ktx").get())
             }
         }
     }

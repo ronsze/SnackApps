@@ -1,5 +1,4 @@
 import com.android.build.api.dsl.LibraryExtension
-import configuration.configureAndroidCompose
 import configuration.configureKotlinAndroid
 import configuration.libs
 import org.gradle.api.Plugin
@@ -13,18 +12,24 @@ class FeatureConventionPlugin : Plugin<Project> {
         with(target) {
             apply(plugin = "com.android.library")
             apply(plugin = "org.jetbrains.kotlin.android")
+            apply(plugin = "snack.compose")
+            apply(plugin = "snack.hilt")
 
             extensions.configure<LibraryExtension> {
                 configureKotlinAndroid(this)
-                configureAndroidCompose(this)
                 defaultConfig.testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
                 defaultConfig.consumerProguardFiles("consumer-rules.pro")
             }
 
             dependencies {
+                "implementation"(project(":core:ui"))
+                "implementation"(project(":core:design-system"))
+                "implementation"(project(":core:android-extensions"))
+
                 "implementation"(libs.findLibrary("androidx-core-ktx").get())
                 "implementation"(libs.findLibrary("androidx-appcompat").get())
                 "implementation"(libs.findLibrary("material").get())
+                "implementation"(libs.findLibrary("androidx-lifecycle-runtime-ktx").get())
             }
         }
     }

@@ -26,7 +26,11 @@
             <option value="$PROJECT_DIR$/build-logic" />
             <option value="$PROJECT_DIR$/build-logic/conventions" />
             <option value="$PROJECT_DIR$/core" />
-            <option value="$PROJECT_DIR$/featuers" />
+            <option value="$PROJECT_DIR$/core/android-extensions" />
+            <option value="$PROJECT_DIR$/core/design-system" />
+            <option value="$PROJECT_DIR$/core/ui" />
+            <option value="$PROJECT_DIR$/features" />
+            <option value="$PROJECT_DIR$/features/clock" />
           </set>
         </option>
       </GradleProjectSettings>
