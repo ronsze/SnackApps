@@ -32,7 +32,7 @@ This project uses the MVI pattern and a Single Activity architecture.
 This project uses a multi-module structure, and common configurations for each module are managed in build-logic.
 <br>
 
-### 모듈 구성
+### Module Structure
 | Category | Role |
 | :-- | :-- |
 | app | Hosts the `SingleActivity` and manages global navigation
