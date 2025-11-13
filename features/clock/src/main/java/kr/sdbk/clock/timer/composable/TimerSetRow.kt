@@ -1,10 +1,5 @@
 package kr.sdbk.clock.timer.composable
 
-import android.util.TypedValue
-import android.view.View
-import android.widget.EditText
-import android.widget.NumberPicker
-import android.widget.TextView
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
@@ -17,14 +12,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.viewinterop.AndroidView
 import kr.sdbk.clock.R
 import kr.sdbk.clock.model.TimerTime
 import kr.sdbk.design_system.component.image.BaseImage
+import kr.sdbk.design_system.component.picker.NumberPicker
 import kr.sdbk.design_system.component.spacer.HorizontalSpacer
 import kr.sdbk.design_system.component.text.BaseText
+import kr.sdbk.design_system.component.text.BasicCenteringText
 import kr.sdbk.design_system.modifier.clickable.rippleClickable
 
 
@@ -34,14 +31,12 @@ internal fun TimeSetRow(
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.height(130.dp)
     ) {
         var minute by remember { mutableIntStateOf(0) }
         var second by remember { mutableIntStateOf(0) }
 
         TimerPicker(
-            currentValue = minute,
-            formatter = { "$it 분" },
+            formatter = { "%02d 분".format(it) },
             modifier = Modifier.weight(1f)
         ) { minute = it }
 
@@ -51,11 +46,9 @@ internal fun TimeSetRow(
         )
 
         TimerPicker(
-            currentValue = second,
-            formatter = { "$it 초" },
+            formatter = { "%02d 초".format(it) },
             modifier = Modifier.weight(1f)
         ) { second = it }
-
         HorizontalSpacer(24.dp)
 
         BaseImage(
@@ -70,30 +63,22 @@ internal fun TimeSetRow(
 
 @Composable
 private fun TimerPicker(
-    currentValue: Int,
     formatter: (Int) -> String,
     modifier: Modifier = Modifier,
     onValueChanged: (Int) -> Unit,
 ) {
-    AndroidView(
-        factory = { context ->
-            val values = (0..59)
-            NumberPicker(context).apply {
-                displayedValues = values.map { formatter(it) }.toTypedArray()
-                minValue = values.first
-                maxValue = values.last
-                value = minValue
-
-                wrapSelectorWheel = true
-                setOnLongPressUpdateInterval(100)
-                setOnValueChangedListener { picker, old, new -> onValueChanged(new) }
-            }
-        },
-        update = {
-            it.value = currentValue
-        },
+    NumberPicker(
+        values = (0..59).map { it },
+        onValueChanged = onValueChanged,
+        formatter = formatter,
         modifier = modifier
-            .fillMaxHeight()
             .padding(horizontal = 24.dp)
-    )
+    ) {
+        BasicCenteringText(
+            text = it,
+            fontSize = 21.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.height(36.dp)
+        )
+    }
 }
