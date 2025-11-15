@@ -1,5 +1,5 @@
 [versions]
-agp = "8.13.0-alpha03"
+agp = "8.12.3"
 kotlin = "2.2.21"
 hilt = "2.57.2"
 
@@ -15,7 +15,7 @@ androidx-junit = { group = "androidx.test.ext", name = "junit", version = "1.3.0
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version = "3.7.0" }
 
 # Dependencies for Compose
-compose-bom = { group = "androidx.compose", name = "compose-bom", version = "2025.10.01" }
+compose-bom = { group = "androidx.compose", name = "compose-bom", version = "2025.11.00" }
 compose-ui = { group = "androidx.compose.ui", name = "ui" }
 compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }

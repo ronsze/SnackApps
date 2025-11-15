@@ -8,7 +8,7 @@ A multi-purpose application composed of feature modules with various functions.
 | **JDK** | **11**
 | **comileSDK** | **API Level 36** (Android 16)
 | **minSDK** | **API Level 28** (Android 9)
-| **Gradle** | **8.13.0-alpha3**
+| **Gradle** | **8.12.3**
 | **Kotlin** | **2.2.21**
 <br>
 
