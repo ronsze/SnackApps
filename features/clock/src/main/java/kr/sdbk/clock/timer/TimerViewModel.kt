@@ -1,9 +1,5 @@
 package kr.sdbk.clock.timer
 
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import kr.sdbk.clock.model.TimerStatus
 import kr.sdbk.clock.model.TimerTime
 import kr.sdbk.ui.viewmodel.BaseViewModel
@@ -12,7 +8,9 @@ import javax.inject.Inject
 class TimerViewModel @Inject constructor() : BaseViewModel<TimerState, TimerIntent, TimerEffect>(
     initialState = TimerState()
 ) {
-    private var timerJob: Job? = null
+    companion object {
+        const val IDLE_TIME = 1
+    }
 
     override fun initializeData() {
         resetTimer()
@@ -20,72 +18,54 @@ class TimerViewModel @Inject constructor() : BaseViewModel<TimerState, TimerInte
 
     override fun handleIntent(intent: TimerIntent) {
         when (intent) {
-            is TimerIntent.ClickTimer -> {
-                when (intent.currentStatus) {
-                    TimerStatus.IDLE,
-                    TimerStatus.PAUSED -> startTimer()
-                    TimerStatus.RUNNING -> pauseTimer()
-                }
+            is TimerIntent.ClickTimer -> onClickTimer(intent.currentStatus)
+            is TimerIntent.LongClickTimer -> stopTimer()
+            is TimerIntent.ClickAddTimer -> addTimer(intent.timerTime)
+            is TimerIntent.SelectTimer -> updateState { it.copy(currentTimerIndex = intent.index) }
+            is TimerIntent.ClickRemoveTimer -> updateState { it.copy(timerTimes = it.timerTimes - intent.timerTime) }
+            is TimerIntent.ClickCycleEnable -> updateState { it.copy(isCycleEnabled = !intent.current) }
+            is TimerIntent.ClickRepeatEnable -> updateState { it.copy(isRepeatEnabled = !intent.current) }
+        }
+    }
+
+    private fun onClickTimer(currentStatus: TimerStatus) {
+        when (currentStatus) {
+            TimerStatus.IDLE -> {
+                startTimer()
             }
-            is TimerIntent.LongClickTimer -> {
-                stopTimer()
+            TimerStatus.PAUSED -> {
+                resumeTimer()
             }
-            is TimerIntent.ClickAddTimer -> {
-                addTimer(intent.timerTime)
-            }
-            is TimerIntent.ClickRemoveTimer -> {
-                updateState { it.copy(timerTimes = it.timerTimes - intent.timerTime) }
+            TimerStatus.RUNNING -> {
+                pauseTimer()
             }
         }
     }
 
     private fun addTimer(timerTime: TimerTime) {
-        if (timerTime.getTotalSeconds() <= 0) {
-            sendEffect(TimerEffect.ShowInvalidTimeToast)
-        } else {
-            updateState { it.copy(timerTimes = it.timerTimes + timerTime) }
-        }
+        if (timerTime.getTotalMilliSeconds() <= 0) sendEffect(TimerEffect.ShowInvalidTimeToast)
+        else updateState { it.copy(timerTimes = it.timerTimes + timerTime) }
     }
 
     private fun startTimer() {
         updateState { it.copy(timerStatus = TimerStatus.RUNNING) }
-
-        timerJob = viewModelScope.launch {
-            state.value.timerTimes.forEachIndexed { i, time ->
-                val entireSeconds = time.getTotalSeconds()
-
-                updateState {
-                    it.copy(
-                        entireTime = entireSeconds.toFloat(),
-                        currentTime = entireSeconds.toFloat(),
-                        currentTimerIndex = i
-                    )
-                }
-
-                while (state.value.currentTime > 0f) {
-                    delay(10L)
-                    updateState { it.copy(currentTime = it.currentTime - 0.01f) }
-                }
-            }
-            stopTimer()
-        }
     }
 
     private fun pauseTimer() {
-        timerJob?.cancel()
         updateState { it.copy(timerStatus = TimerStatus.PAUSED) }
     }
 
+    private fun resumeTimer() {
+    }
+
     private fun stopTimer() {
-        pauseTimer()
-        resetTimer()
-        timerJob = null
         updateState { it.copy(timerStatus = TimerStatus.IDLE) }
     }
 
     private fun resetTimer() {
-        updateState { it.copy(entireTime = 1f, currentTime = 1f, currentTimerIndex = -1) }
+        val timerIndex = if (state.value.isCycleEnabled) 0 else state.value.currentTimerIndex
+        updateState { it.copy(entireTimeMs = IDLE_TIME, currentTimeMs= IDLE_TIME, currentTimerIndex = timerIndex) }
     }
 
-    private fun TimerTime.getTotalSeconds() = minute * 60 + second
+    private fun TimerTime.getTotalMilliSeconds() = (minute * 60 + second) * 1000
 }

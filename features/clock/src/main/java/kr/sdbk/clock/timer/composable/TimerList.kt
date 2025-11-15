@@ -25,13 +25,13 @@ import kr.sdbk.design_system.component.text.BasicCenteringText
 import kr.sdbk.design_system.modifier.clickable.rippleClickable
 import kr.sdbk.design_system.ui.theme.black
 import kr.sdbk.design_system.ui.theme.gray
-import java.util.Locale
 
 @Composable
 internal fun TimerList(
     timerStatus: TimerStatus,
     timerTimes: List<TimerTime>,
     currentTimerIndex: Int,
+    onSelectTimer: (index: Int) -> Unit,
     onClickRemove: (TimerTime) -> Unit
 ) {
     LazyColumn(
@@ -40,7 +40,14 @@ internal fun TimerList(
             .fillMaxWidth()
     ) {
         itemsIndexed(timerTimes) { i, v ->
-            TimerListItem(i, v, timerStatus, currentTimerIndex, onClickRemove)
+            TimerListItem(
+                index = i,
+                timerTime = v,
+                timerStatus = timerStatus,
+                currentTimerIndex = currentTimerIndex,
+                onSelectTimer = onSelectTimer,
+                onClickRemove = onClickRemove
+            )
         }
     }
 }
@@ -51,6 +58,7 @@ private fun TimerListItem(
     timerTime: TimerTime,
     timerStatus: TimerStatus,
     currentTimerIndex: Int,
+    onSelectTimer: (index: Int) -> Unit,
     onClickRemove: (TimerTime) -> Unit
 ) {
     val textProperties = when {
@@ -60,7 +68,9 @@ private fun TimerListItem(
     }
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.height(45.dp)
+        modifier = Modifier
+            .height(45.dp)
+            .rippleClickable { onSelectTimer(index) }
     ) {
         ItemText(timerTime.minute, textProperties, Modifier.weight(1f)) {
             "${"%02d".format(it)} 분"
@@ -110,23 +120,23 @@ private data class ItemTextProperties(
 @Preview
 @Composable
 private fun ItemPreviewPrevious() {
-    TimerListItem(0, TimerTime(10, 10), TimerStatus.IDLE, 1) {}
+    TimerListItem(0, TimerTime(10, 10), TimerStatus.IDLE, 1, {}, {})
 }
 
 @Preview
 @Composable
 private fun ItemPreviewCurrent() {
-    TimerListItem(1, TimerTime(10, 10), TimerStatus.IDLE, 1) {}
+    TimerListItem(1, TimerTime(10, 10), TimerStatus.IDLE, 1, {}, {})
 }
 
 @Preview
 @Composable
 private fun ItemPreviewNext() {
-    TimerListItem(2, TimerTime(10, 10), TimerStatus.IDLE, 1) {}
+    TimerListItem(2, TimerTime(10, 10), TimerStatus.IDLE, 1, {}, {})
 }
 
 @Preview
 @Composable
 private fun ItemPreviewRunning() {
-    TimerListItem(1, TimerTime(10, 10), TimerStatus.RUNNING, 1) {}
+    TimerListItem(1, TimerTime(10, 10), TimerStatus.RUNNING, 1, {}, {})
 }

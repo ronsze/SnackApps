@@ -2,6 +2,7 @@ package kr.sdbk.design_system.component.picker
 
 import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
@@ -24,7 +25,7 @@ fun NumberPicker(
     val listState = rememberLazyListState(initialFirstVisibleItemIndex = with (Int.MAX_VALUE / 2) { this - (this % values.size) } - (visibleItemCount / 2))
     val flingBehavior = rememberSnapFlingBehavior(listState)
 
-    SubcomposeLayout(Modifier) { constraints ->
+    SubcomposeLayout(Modifier.wrapContentHeight().then(modifier)) { constraints ->
         val itemMeasurables = subcompose("pickerItem", { item("0") })
         val itemPlaceables = itemMeasurables.fastMap { it.measure(constraints) }
 
@@ -34,9 +35,7 @@ fun NumberPicker(
             LazyColumn(
                 state = listState,
                 flingBehavior = flingBehavior,
-                modifier = Modifier
-                    .height(height.toDp())
-                    .then(modifier)
+                modifier = Modifier.height(height.toDp())
             ) {
                 items(Int.MAX_VALUE) { item(formatter(values[it % values.size])) }
             }

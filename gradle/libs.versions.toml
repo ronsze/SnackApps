@@ -22,6 +22,7 @@ compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+compose-material-icons = { group = "androidx.compose.material", name = "material-icons-extended" }
 compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 compose-navigation = { group = "androidx.navigation", name = "navigation-compose", version = "2.9.5" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version = "1.11.0" }
@@ -57,4 +58,4 @@ snack-compose = { id = "snack.compose" }
 snack-hilt = { id = "snack.hilt" }
 
 [bundles]
-compose = ["compose-ui", "compose-ui-graphics", "compose-ui-tooling", "compose-ui-tooling-preview", "compose-material3", "compose-navigation", "androidx-activity-compose"]
+compose = ["compose-ui", "compose-ui-graphics", "compose-ui-tooling", "compose-ui-tooling-preview", "compose-material3", "compose-navigation", "androidx-activity-compose", "compose-material-icons"]

@@ -15,5 +15,6 @@ val transparent = Color(0x00000000)
 val white = Color(0xFFFFFFFF)
 val black = Color(0xFF000000)
 val gray = Color(0xFF797979)
+val lightGray = Color(0xFFB9B9B9)
 
 val yellow = Color(0xFFFDD621)
